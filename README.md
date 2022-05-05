@@ -13,6 +13,6 @@ If you use [Poggit](https://poggit.pmmp.io) to build your plugin, you can add it
 projects:
   YourPlugin:
     libs:
-      - src: nhanaz/libRegRsp/libRegRsp
+      - src: NhanAZ/libRegRsp/libRegRsp
         version: ^1.0.0
 ```
