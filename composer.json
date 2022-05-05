@@ -4,9 +4,8 @@
     "type": "library",
     "license": "MIT",
     "autoload": {
-        "psr-4": {
-            "Nhanaz\\Libregrsp\\": "src/"
+        "psr-0": {
+            "NhanAZ\\libRegRsp\\": "src/"
         }
-    },
-    "require": {}
+    }
 }
