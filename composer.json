@@ -1,0 +1,11 @@
+{
+    "name": "nhanaz/libregrsp",
+    "description": "Resource pack register library for PocketMine plugins",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-0": {
+            "NhanAZ\\libRegRsp\\": "src/"
+        }
+    }
+}
