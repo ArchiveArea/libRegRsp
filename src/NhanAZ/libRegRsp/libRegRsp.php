@@ -54,7 +54,7 @@ class libRegRsp {
 		$currentResourcePacks = $property->getValue($manager);
 		$key = array_search($pack, $currentResourcePacks, true);
 		if ((bool)$key) {
-			unset($currentResourcePacks[$key]);
+			unset($currentResourcePacks[(bool)$key]);
 			$property->setValue($manager, $currentResourcePacks);
 		}
 
