@@ -4,5 +4,6 @@ version: 1.0.0
 antigen: NhanAZ\libRegRsp
 api: [4.0.0]
 php: [8.0]
+authors: ["NhanAZ", "jasonwynn10"]
 description: Resource pack register library for PocketMine plugins
 ...

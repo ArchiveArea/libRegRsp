@@ -1,11 +1,14 @@
 {
-    "name": "nhanaz/libregrsp",
+    "name": "NhanAZ/libregrsp",
     "description": "Resource pack register library for PocketMine plugins",
     "type": "library",
-    "license": "MIT",
+    "license": "LGPL-3.0 license",
     "autoload": {
         "psr-0": {
             "NhanAZ\\libRegRsp\\": "src/"
         }
+    },
+    "require": {
+        "friendsofphp/php-cs-fixer": "^3.8"
     }
 }
