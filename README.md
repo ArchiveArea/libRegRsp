@@ -1,7 +1,3 @@
-Please switch to using this library: https://github.com/jasonwynn10/libCustomPack
-
----
-
 # libRegRsp
 Resource pack register library for PocketMine plugins
 Integrate the virion itself into your plugin or you could also use it as a composer library by running the command below:
