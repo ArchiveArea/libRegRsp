@@ -7,8 +7,5 @@
         "psr-0": {
             "NhanAZ\\libRegRsp\\": "src/"
         }
-    },
-    "require": {
-        "friendsofphp/php-cs-fixer": "^3.8"
     }
 }
