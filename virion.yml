@@ -1,8 +1,8 @@
 ---
 name: libRegRsp
-version: 1.0.0
+version: 1.0.1+dev
 antigen: NhanAZ\libRegRsp
-api: [4.0.0]
+api: [5.0.0]
 php: [8.0]
 authors: ["NhanAZ", "jasonwynn10"]
 description: Resource pack register library for PocketMine plugins
