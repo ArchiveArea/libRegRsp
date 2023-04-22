@@ -4,8 +4,12 @@
     "type": "library",
     "license": "LGPL-3.0 license",
     "autoload": {
-        "psr-0": {
-            "NhanAZ\\libRegRsp\\": "src/"
+        "classmap": ["src"]
+    },
+    "extra": {
+        "virion": {
+            "spec": "3.0",
+            "namespace-root": "NhanAZ\\libRegRsp"
         }
     }
 }
