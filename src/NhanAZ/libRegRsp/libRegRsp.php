@@ -15,7 +15,8 @@ class libRegRsp {
 
 	public function __construct(
 		private PluginBase $plugin
-	) {}
+	) {
+	}
 
 	public function regRsp(): void {
 		// Compile resource pack
