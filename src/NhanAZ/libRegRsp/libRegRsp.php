@@ -8,14 +8,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\resourcepacks\ResourcePack;
 use pocketmine\resourcepacks\ZippedResourcePack;
 use pocketmine\utils\Filesystem;
-use ReflectionClass;
 use Webmozart\PathUtil\Path;
-use ZipArchive;
-use function array_search;
-use function mb_strtolower;
-use function preg_replace;
-use function str_contains;
-use function unlink;
 
 class libRegRsp {
 	private static ?ResourcePack $pack = null;
@@ -25,10 +18,10 @@ class libRegRsp {
 	) {
 	}
 
-	public function regRsp() {
+	public function regRsp(): void {
 		// Compile resource pack
-		$zip = new ZipArchive();
-		$zip->open(Path::join($this->plugin->getDataFolder(), $this->plugin->getName() . '.mcpack'), ZipArchive::CREATE | ZipArchive::OVERWRITE);
+		$zip = new \ZipArchive();
+		$zip->open(Path::join($this->plugin->getDataFolder(), $this->plugin->getName() . '.mcpack'), \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 		foreach ($this->plugin->getResources() as $resource) {
 			if ($resource->isFile() and str_contains($resource->getPathname(), $this->plugin->getName() . ' Pack')) {
 				$relativePath = Path::normalize(preg_replace("/.*[\/\\\\]{$this->plugin->getName()}\hPack[\/\\\\].*/U", '', $resource->getPathname()));
@@ -45,11 +38,11 @@ class libRegRsp {
 		$this->plugin->getLogger()->debug('Resource pack registered');
 	}
 
-	public function unRegRsp() {
+	public function unRegRsp(): void {
 		$manager = $this->plugin->getServer()->getResourcePackManager();
 		$pack = self::$pack;
 
-		$reflection = new ReflectionClass($manager);
+		$reflection = new \ReflectionClass($manager);
 
 		$property = $reflection->getProperty("resourcePacks");
 		$property->setAccessible(true);
@@ -73,10 +66,10 @@ class libRegRsp {
 		$this->plugin->getLogger()->debug('Resource pack file deleted');
 	}
 
-	private function registerResourcePack(ResourcePack $pack) {
+	private function registerResourcePack(ResourcePack $pack): void {
 		$manager = $this->plugin->getServer()->getResourcePackManager();
 
-		$reflection = new ReflectionClass($manager);
+		$reflection = new \ReflectionClass($manager);
 
 		$property = $reflection->getProperty("resourcePacks");
 		$property->setAccessible(true);
