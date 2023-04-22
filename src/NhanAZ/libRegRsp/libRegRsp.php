@@ -15,13 +15,13 @@ class libRegRsp {
 
 	public function __construct(
 		private PluginBase $plugin
-	) {
-	}
+	) {}
 
 	public function regRsp(): void {
 		// Compile resource pack
 		$zip = new \ZipArchive();
 		$zip->open(Path::join($this->plugin->getDataFolder(), $this->plugin->getName() . '.mcpack'), \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
 		foreach ($this->plugin->getResources() as $resource) {
 			if ($resource->isFile() and str_contains($resource->getPathname(), $this->plugin->getName() . ' Pack')) {
 				$relativePath = Path::normalize(preg_replace("/.*[\/\\\\]{$this->plugin->getName()}\hPack[\/\\\\].*/U", '', $resource->getPathname()));
@@ -29,6 +29,7 @@ class libRegRsp {
 				$zip->addFile(Path::join($this->plugin->getDataFolder(), $this->plugin->getName() . ' Pack', $relativePath), $relativePath);
 			}
 		}
+
 		$zip->close();
 		Filesystem::recursiveUnlink(Path::join($this->plugin->getDataFolder() . $this->plugin->getName() . ' Pack'));
 		$this->plugin->getLogger()->debug('Resource pack compiled');
@@ -48,6 +49,7 @@ class libRegRsp {
 		$property->setAccessible(true);
 		$currentResourcePacks = $property->getValue($manager);
 		$key = array_search($pack, $currentResourcePacks, true);
+
 		if ($key !== false) {
 			unset($currentResourcePacks[$key]);
 			$property->setValue($manager, $currentResourcePacks);
@@ -56,6 +58,7 @@ class libRegRsp {
 		$property = $reflection->getProperty("uuidList");
 		$property->setAccessible(true);
 		$currentUUIDPacks = $property->getValue($manager);
+
 		if (isset($currentResourcePacks[mb_strtolower($pack->getPackId())])) {
 			unset($currentUUIDPacks[mb_strtolower($pack->getPackId())]);
 			$property->setValue($manager, $currentUUIDPacks);
