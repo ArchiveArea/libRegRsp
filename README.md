@@ -17,7 +17,7 @@ projects:
   YourPlugin:
     libs:
       - src: NhanAZ/libRegRsp/libRegRsp
-        version: ^1.0.1
+        version: x.y.z
 ```
 
 # Contact
