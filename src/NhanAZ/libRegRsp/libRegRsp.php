@@ -8,7 +8,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\resourcepacks\ResourcePack;
 use pocketmine\resourcepacks\ZippedResourcePack;
 use pocketmine\utils\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class libRegRsp {
 	private static ?ResourcePack $pack = null;
