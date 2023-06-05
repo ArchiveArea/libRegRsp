@@ -11,37 +11,54 @@ use pocketmine\utils\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class libRegRsp {
+
 	private static ?ResourcePack $pack = null;
 
-	public function __construct(
-		private PluginBase $plugin
-	) {
-	}
-
-	public function regRsp(): void {
-		// Compile resource pack
+	public static function regRsp(PluginBase $plugin): void {
+		$plugin->getLogger()->debug('Compiling resource pack');
 		$zip = new \ZipArchive();
-		$zip->open(Path::join($this->plugin->getDataFolder(), $this->plugin->getName() . '.mcpack'), \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+		$zip->open(Path::join($plugin->getDataFolder(), $plugin->getName() . '.mcpack'), \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
-		foreach ($this->plugin->getResources() as $resource) {
-			if ($resource->isFile() and str_contains($resource->getPathname(), $this->plugin->getName() . ' Pack')) {
-				$relativePath = Path::normalize(preg_replace("/.*[\/\\\\]{$this->plugin->getName()}\hPack[\/\\\\].*/U", '', $resource->getPathname()));
-				$this->plugin->saveResource(Path::join($this->plugin->getName() . ' Pack', $relativePath), false);
-				$zip->addFile(Path::join($this->plugin->getDataFolder(), $this->plugin->getName() . ' Pack', $relativePath), $relativePath);
+		foreach ($plugin->getResources() as $resource) {
+			if ($resource->isFile() and str_contains($resource->getPathname(), $plugin->getName() . ' Pack')) {
+				$relativePath = Path::normalize(preg_replace("/.*[\/\\\\]{$plugin->getName()}\hPack[\/\\\\].*/U", '', $resource->getPathname()));
+				$plugin->saveResource(Path::join($plugin->getName() . ' Pack', $relativePath), false);
+				$zip->addFile(Path::join($plugin->getDataFolder(), $plugin->getName() . ' Pack', $relativePath), $relativePath);
 			}
 		}
 
 		$zip->close();
-		Filesystem::recursiveUnlink(Path::join($this->plugin->getDataFolder() . $this->plugin->getName() . ' Pack'));
-		$this->plugin->getLogger()->debug('Resource pack compiled');
+		Filesystem::recursiveUnlink(Path::join($plugin->getDataFolder() . $plugin->getName() . ' Pack'));
+		$plugin->getLogger()->debug('Resource pack compiled');
 
-		// Register resource pack
-		$this->registerResourcePack(self::$pack = new ZippedResourcePack(Path::join($this->plugin->getDataFolder(), $this->plugin->getName() . '.mcpack')));
-		$this->plugin->getLogger()->debug('Resource pack registered');
+		$plugin->getLogger()->debug('Registering resource pack');
+		$plugin->getLogger()->debug('Resource pack compiled');
+		self::$pack = $pack = new ZippedResourcePack(Path::join($plugin->getDataFolder(), $plugin->getName() . '.mcpack'));
+		$manager = $plugin->getServer()->getResourcePackManager();
+
+		$reflection = new \ReflectionClass($manager);
+
+		$property = $reflection->getProperty("resourcePacks");
+		$property->setAccessible(true);
+		$currentResourcePacks = $property->getValue($manager);
+		$currentResourcePacks[] = $pack;
+		$property->setValue($manager, $currentResourcePacks);
+
+		$property = $reflection->getProperty("uuidList");
+		$property->setAccessible(true);
+		$currentUUIDPacks = $property->getValue($manager);
+		$currentUUIDPacks[mb_strtolower($pack->getPackId())] = $pack;
+		$property->setValue($manager, $currentUUIDPacks);
+
+		$property = $reflection->getProperty("serverForceResources");
+		$property->setAccessible(true);
+		$property->setValue($manager, true);
+
+		$plugin->getLogger()->debug('Resource pack registered');
 	}
 
-	public function unRegRsp(): void {
-		$manager = $this->plugin->getServer()->getResourcePackManager();
+	public static function unRegRsp(PluginBase $plugin): void {
+		$manager = $plugin->getServer()->getResourcePackManager();
 		$pack = self::$pack;
 
 		$reflection = new \ReflectionClass($manager);
@@ -64,31 +81,9 @@ class libRegRsp {
 			unset($currentUUIDPacks[mb_strtolower($pack->getPackId())]);
 			$property->setValue($manager, $currentUUIDPacks);
 		}
-		$this->plugin->getLogger()->debug('Resource pack unregistered');
+		$plugin->getLogger()->debug('Resource pack unregistered');
 
-		unlink(Path::join($this->plugin->getDataFolder(), $this->plugin->getName() . '.mcpack'));
-		$this->plugin->getLogger()->debug('Resource pack file deleted');
-	}
-
-	private function registerResourcePack(ResourcePack $pack): void {
-		$manager = $this->plugin->getServer()->getResourcePackManager();
-
-		$reflection = new \ReflectionClass($manager);
-
-		$property = $reflection->getProperty("resourcePacks");
-		$property->setAccessible(true);
-		$currentResourcePacks = $property->getValue($manager);
-		$currentResourcePacks[] = $pack;
-		$property->setValue($manager, $currentResourcePacks);
-
-		$property = $reflection->getProperty("uuidList");
-		$property->setAccessible(true);
-		$currentUUIDPacks = $property->getValue($manager);
-		$currentUUIDPacks[mb_strtolower($pack->getPackId())] = $pack;
-		$property->setValue($manager, $currentUUIDPacks);
-
-		$property = $reflection->getProperty("serverForceResources");
-		$property->setAccessible(true);
-		$property->setValue($manager, true);
+		unlink(Path::join($plugin->getDataFolder(), $plugin->getName() . '.mcpack'));
+		$plugin->getLogger()->debug('Resource pack file deleted');
 	}
 }
