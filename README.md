@@ -1,3 +1,6 @@
+> **Warning**
+> This repository is no longer in active development. Please use the library https://github.com/NhanAZ/libBedrock
+
 # libRegRsp
 Resource pack register library for PocketMine plugins
 Integrate the virion itself into your plugin or you could also use it as a composer library by running the command below:
